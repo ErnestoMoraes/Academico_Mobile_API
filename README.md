@@ -6,4 +6,4 @@ Projeto individual de TCC 2
 - Playwricht
 - Cheeiro
 
-![Alt Text](images\image.png)
+![Alt Text](https://github.com/ErnestoMoraes/Academico_Mobile_API/blob/main/images/image.png)
