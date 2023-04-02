@@ -1,0 +1,19 @@
+{
+  "name": "codegen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.32.0"
+  },
+  "dependencies": {
+    "@types/jsdom": "^21.1.1",
+    "cheerio": "^1.0.0-rc.12",
+    "jsdom": "^21.1.1",
+    "puppeteer": "^19.8.2"
+  }
+}
