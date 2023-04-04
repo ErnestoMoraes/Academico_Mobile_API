@@ -1,0 +1,31 @@
+{
+    "id": 113501,
+    "nome": "Computação Gráfica",
+    "professor": "José Ernesto dos Santos Moraes",
+    "resumo": {
+        "carga_horaria": "60",
+        "faltas": "20",
+        "aulas_futuras": [
+            "1",
+            "10"
+        ],
+        "presencas": [
+            "1",
+            "10"
+        ],
+        "ausencias": [
+            "1",
+            "10"
+        ],
+        "pendentes": [
+            "1",
+            "10"
+        ]
+    },
+    "avaliacoes": [
+        "1",
+        "2",
+        "3",
+        "4"
+    ]
+}

@@ -32,14 +32,18 @@ test('Lista de disciplinas de um semestre especifico', async ({ }) => {
                 numeroDisciplina: Disciplina.find('div:nth-child(2)').html(),
                 professorDisciplina: Disciplina.find('div:nth-child(3)').html()
             });
+            const dados = $(el).find('div.collapse').find('div:nth-child(1)').find('div:nth-child(2)').find('div').find('div[class="margin-bottom-1 small"]');
+            dados.each((i, el) => {
+                const dados = $(el).find('strong').first().html();
+                console.log(dados);
+            });
         });
-        for (let i = 0; i < dadosdisciplina.length; i++) {
-            console.log(dadosdisciplina[i].numeroDisciplina);
-        }
 
     });
     page.close();
 });
 
 
+
+//*[@id="516177"]/div[2]/div/div[2]
 

@@ -1,0 +1,247 @@
+<div class="panel diarios-aluno__disciplina__container nga-fast nga-slide-left"
+    ng-repeat="diario in $ctrl.diarios | orderBy:['disciplina']" id="352765">
+    <div class="panel__content hover" ng-click="$ctrl.mostrarDetalhes(diario)">
+        <div class="diarios-aluno__disciplina__content">
+            <div>
+                <div class="extra-small cl-text-faint"> 352765 </div>
+                <div class="h6"> BANCO DE DADOS I </div>
+                <div class="small"> HENRIQUE VIANA OLIVEIRA; FABIO JOSÉ GOMES DE SOUSA </div>
+            </div>
+            <div style="width:460px" ng-hide="diario.diarioOrientacao"> <c-progress-bar-aluno data="diario._progress"
+                    mostrar-obrigatorias="true">
+                    <div class="margin-top-1">
+                        <c-progress-bar data="$ctrl.myData" max="$ctrl.myMax" absolute="true">
+                            <div class="extra-small" style="display:flex;margin-top:1px">
+                                <div ng-show="!$ctrl.mostrarValores" class="full-width ng-hide">
+                                    <div class="cl-text-faint">Não há valores para mostrar</div>
+                                    <div class="bg-light-gray" ng-style="{'height': $ctrl.height}" style="height: 5px;">
+                                    </div>
+                                </div> <!---->
+                                <div ng-show="$ctrl.mostrarValores &amp;&amp; d.value > 0" ng-repeat="d in $ctrl.data"
+                                    uib-tooltip="Presença: " ng-style="{'width': d.percent+'%'}" style="width: 95%;">
+                                    <div ng-hide="$ctrl.hideLabel" class="strong color-bg-presenca"
+                                        style="padding-right:1px"> <span ng-show="$ctrl.absolute">76</span> <span
+                                            ng-hide="$ctrl.absolute" class="ng-hide">95%</span> </div>
+                                    <div class="bg-presenca flex column"
+                                        ng-style="{'background-color': d.color, 'height': $ctrl.height}"
+                                        style="justify-content: flex-end; height: 5px;">
+                                        <div style="background-color: rgb(177, 38, 45); height: 3px; width: 0%;"
+                                            ng-style="{'width': d.percent2+'%'}" ng-show="d.value2" class="ng-hide">
+                                        </div>
+                                    </div>
+                                </div><!---->
+                                <div ng-show="$ctrl.mostrarValores &amp;&amp; d.value > 0" ng-repeat="d in $ctrl.data"
+                                    uib-tooltip="Faltas: " ng-style="{'width': d.percent+'%'}" style="width: 5%;">
+                                    <div ng-hide="$ctrl.hideLabel" class="strong color-bg-falta"
+                                        style="padding-right:1px"> <span ng-show="$ctrl.absolute">4</span> <span
+                                            ng-hide="$ctrl.absolute" class="ng-hide">5%</span> </div>
+                                    <div class="bg-falta flex column"
+                                        ng-style="{'background-color': d.color, 'height': $ctrl.height}"
+                                        style="justify-content: flex-end; height: 5px;">
+                                        <div style="background-color: rgb(177, 38, 45); height: 3px; width: 0%;"
+                                            ng-style="{'width': d.percent2+'%'}" ng-show="d.value2" class="ng-hide">
+                                        </div>
+                                    </div>
+                                </div><!---->
+                                <div ng-show="$ctrl.mostrarValores &amp;&amp; d.value > 0" ng-repeat="d in $ctrl.data"
+                                    uib-tooltip="Faltas Abonadas: " ng-style="{'width': d.percent+'%'}" class="ng-hide"
+                                    style="width: 0%;">
+                                    <div ng-hide="$ctrl.hideLabel" class="strong color-bg-falta-abonada"
+                                        style="padding-right:1px"> <span ng-show="$ctrl.absolute">0</span> <span
+                                            ng-hide="$ctrl.absolute" class="ng-hide">0%</span> </div>
+                                    <div class="bg-falta-abonada flex column"
+                                        ng-style="{'background-color': d.color, 'height': $ctrl.height}"
+                                        style="justify-content: flex-end; height: 5px;">
+                                        <div style="background-color: rgb(177, 38, 45); height: 3px; width: 0%;"
+                                            ng-style="{'width': d.percent2+'%'}" ng-show="d.value2" class="ng-hide">
+                                        </div>
+                                    </div>
+                                </div><!---->
+                                <div ng-show="$ctrl.mostrarValores &amp;&amp; d.value > 0" ng-repeat="d in $ctrl.data"
+                                    uib-tooltip="Aulas Pendentes: " ng-style="{'width': d.percent+'%'}" class="ng-hide"
+                                    style="width: 0%;">
+                                    <div ng-hide="$ctrl.hideLabel" class="strong color-bg-aula-pendente"
+                                        style="padding-right:1px"> <span ng-show="$ctrl.absolute">0</span> <span
+                                            ng-hide="$ctrl.absolute" class="ng-hide">0%</span> </div>
+                                    <div class="bg-aula-pendente flex column"
+                                        ng-style="{'background-color': d.color, 'height': $ctrl.height}"
+                                        style="justify-content: flex-end; height: 5px;">
+                                        <div style="background-color: rgb(177, 38, 45); height: 3px; width: 0%;"
+                                            ng-style="{'width': d.percent2+'%'}" ng-show="d.value2" class="ng-hide">
+                                        </div>
+                                    </div>
+                                </div><!---->
+                                <div ng-show="$ctrl.mostrarValores &amp;&amp; d.value > 0" ng-repeat="d in $ctrl.data"
+                                    uib-tooltip="Aulas Futuras: " ng-style="{'width': d.percent+'%'}" class="ng-hide"
+                                    style="width: 0%;">
+                                    <div ng-hide="$ctrl.hideLabel" class="strong color-bg-aula-futura"
+                                        style="padding-right:1px"> <span ng-show="$ctrl.absolute">0</span> <span
+                                            ng-hide="$ctrl.absolute" class="ng-hide">0%</span> </div>
+                                    <div class="bg-aula-futura flex column"
+                                        ng-style="{'background-color': d.color, 'height': $ctrl.height}"
+                                        style="justify-content: flex-end; height: 5px;">
+                                        <div style="background-color: rgb(177, 38, 45); height: 3px; width: 0%;"
+                                            ng-style="{'width': d.percent2+'%'}" ng-show="d.value2" class="ng-hide">
+                                        </div>
+                                    </div>
+                                </div><!---->
+                            </div>
+                        </c-progress-bar>
+                        <!----><c-progress-bar data="$ctrl.myData2" max="$ctrl.myMax" absolute="true" hide-label="true"
+                            ng-if="$ctrl.mostrarObrigatorias">
+                            <div class="extra-small" style="display:flex;margin-top:1px">
+                                <div ng-show="!$ctrl.mostrarValores" class="full-width ng-hide">
+                                    <div class="cl-text-faint">Não há valores para mostrar</div>
+                                    <div class="bg-light-gray" ng-style="{'height': $ctrl.height}" style="height: 5px;">
+                                    </div>
+                                </div> <!---->
+                                <div ng-show="$ctrl.mostrarValores &amp;&amp; d.value > 0" ng-repeat="d in $ctrl.data"
+                                    uib-tooltip="Aulas obrigatórias: " ng-style="{'width': d.percent+'%'}"
+                                    style="width: 100%;">
+                                    <div ng-hide="$ctrl.hideLabel" class="strong color-bg-aula-obrigatoria ng-hide"
+                                        style="padding-right:1px"> <span ng-show="$ctrl.absolute">80</span> <span
+                                            ng-hide="$ctrl.absolute" class="ng-hide">100%</span> </div>
+                                    <div class="bg-aula-obrigatoria flex column"
+                                        ng-style="{'background-color': d.color, 'height': $ctrl.height}"
+                                        style="justify-content: flex-end; height: 5px;">
+                                        <div style="background-color: rgb(177, 38, 45); height: 3px; width: 0%;"
+                                            ng-style="{'width': d.percent2+'%'}" ng-show="d.value2" class="ng-hide">
+                                        </div>
+                                    </div>
+                                </div><!---->
+                            </div>
+                        </c-progress-bar><!---->
+                    </div>
+                </c-progress-bar-aluno> </div>
+        </div>
+    </div>
+    <div uib-collapse="!diario._mostrarDetalhes" class="collapse" style="height: 0px;">
+        <div class="panel__content">
+            <div class="tab">
+                <div class="tab-header tab-active" ng-class="{'tab-active': diario._pagina==='resumo'}"
+                    ng-hide="diario.diarioOrientacao" ng-click="$ctrl.setPagina(diario,'resumo')"> Resumo das Aulas
+                </div>
+                <div class="tab-header" ng-class="{'tab-active': diario._pagina==='materiais'}"
+                    ng-click="$ctrl.setPagina(diario,'materiais')"> Materiais de Aula </div>
+                <div class="tab-header" ng-class="{'tab-active': diario._pagina==='avaliacoes'}"
+                    ng-click="$ctrl.setPagina(diario,'avaliacoes')"> Avaliações </div>
+                <div class="tab-header" ng-class="{'tab-active': diario._pagina==='aulas'}"
+                    ng-click="$ctrl.setPagina(diario,'aulas')"> Aulas </div>
+                <div class="tab-header" ng-class="{'tab-active': diario._pagina==='atividades'}"
+                    ng-click="$ctrl.setPagina(diario,'atividades')"> Entregar Atividades </div>
+            </div>
+            <div class="panel__content" ng-show="diario._pagina==='resumo' &amp;&amp; !diario.diarioOrientacao">
+                <div class="margin-top-2">
+                    <div class="margin-bottom-1 small"> <strong>Carga Horária: 80H </strong> <strong
+                            class="margin-left-1 ng-hide" ng-show="diario.aulasObrigatorias != diario.aulasPlanejadas">
+                            <span class="cl-warning"> <i class="fa fa-warning"></i> CUIDADO. </span> Existem <span
+                                ng-show="diario.aulasObrigatorias > diario.aulasPlanejadas" class="ng-hide"> 0 aulas
+                                planejadas a menos que as necessárias</span> <span
+                                ng-hide="diario.aulasObrigatorias > diario.aulasPlanejadas"> 0 aulas planejadas a mais
+                                que as necessárias</span> </strong> </div>
+                    <div class="margin-bottom-2">
+                        <div class="small" ng-hide="diario.faltas > diario.maxNFaltas"> Você ainda pode ter 16 faltas
+                            nessa disciplina até ser reprovado por falta. </div>
+                        <div class="small cl-falta ng-hide" ng-show="diario.faltas > diario.maxNFaltas"> Você já possui
+                            -16 faltas além do limite para reprovação! </div>
+                    </div>
+                    <div class="gridlex-4_xs-1 gridlex-equalHeight">
+                        <div class="col">
+                            <div class="card--dark" style="padding:.6em!important">
+                                <div class="flex items-center small">
+                                    <div> <i class="fa fa-square margin-right-1 cl-aula-obrigatoria small"></i> </div>
+                                    <div> <strong>80</strong> horas aulas necessárias </div>
+                                </div>
+                                <div class="cl-text-faint extra-small margin-top-1"> Aulas necessárias de acordo com a
+                                    carga horária da disciplina e a duração das aulas </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card--dark" style="padding:.6em!important">
+                                <div class="flex items-center small">
+                                    <div> <i class="fa fa-square margin-right-1 cl-presenca small"></i> </div>
+                                    <div style="flex:1"> <strong>76 </strong> presenças (<strong>95,00%</strong>) </div>
+                                </div>
+                                <div class="cl-text-faint extra-small margin-top-1"> Aulas em que você esteve presente
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card--dark" style="padding:.6em!important">
+                                <div class="flex items-center small">
+                                    <div> <i class="fa fa-square margin-right-1 cl-falta small"></i> </div>
+                                    <div style="flex:1"> <strong>4</strong> ausências (<strong>5,00%</strong>) </div>
+                                </div>
+                                <div class="cl-text-faint extra-small margin-top-1"> Aulas em que você esteve ausente
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col ng-hide"
+                            ng-show="$ctrl.config.mostrarAulaPendente &amp;&amp; diario.aulasPendentes">
+                            <div class="card--dark" style="padding:.6em!important">
+                                <div class="flex items-center small">
+                                    <div> <i class="fa fa-square margin-right-1 cl-aula-pendente small"></i> </div>
+                                    <div style="flex:1"> <strong>0</strong> pendentes <strong>(0,00%)</strong> </div>
+                                </div>
+                                <div class="cl-text-faint extra-small margin-top-1"> Aulas que já aconteceram e o
+                                    professor ainda não lançou a frequência. </div>
+                            </div>
+                        </div>
+                        <div class="col ng-hide" ng-show="diario.aulasFuturas">
+                            <div class="card--dark" style="padding:.6em!important">
+                                <div class="flex items-center small">
+                                    <div> <i class="fa fa-square margin-right-1 cl-aula-futura small"></i> </div>
+                                    <div style="flex:1"> <strong>0</strong> horas aulas futuras (<strong>0,00%</strong>)
+                                    </div>
+                                </div>
+                                <div class="cl-text-faint extra-small margin-top-1"> Aulas que ainda vão acontecer
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col ng-hide"
+                            ng-show="$ctrl.config.mostrarAulaAbonada &amp;&amp; diario.faltasAbonadas">
+                            <div class="card--dark" style="padding:.6em!important">
+                                <div class="flex items-center small">
+                                    <div> <i class="fa fa-square margin-right-1 cl-falta-abonada small"></i> </div>
+                                    <div style="flex:1"> <strong>0</strong> aulas com registro de falta abonada
+                                        (<strong>0,00%</strong>) </div>
+                                </div>
+                                <div class="cl-text-faint extra-small margin-top-1"> Aulas onde você esteve ausente mas
+                                    foram abonadas </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel ng-hide" ng-show="diario._pagina==='materiais'">
+                <div class="margin-top-2">
+                    <div class="cl-text-faint text-center margin-top-2"
+                        ng-show="!diario._materiais || diario._materiais.length === 0"> Nenhum material de aula
+                        registrado nesta disciplina. </div>
+                    <div ng-show="diario._materiais &amp;&amp; diario._materiais.length !== 0" class="ng-hide">
+                        <div class="gridlex-2_sm-1 gridlex-equalHeight"> <!----> </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel__content ng-hide" ng-show="diario._pagina==='avaliacoes'">
+                <div class="cl-text-faint text-center"
+                    ng-show="!diario._etapasAvaliacoes || diario._etapasAvaliacoes.length === 0"> Nenhuma avaliação
+                    registrada nesta disciplina. </div>
+                <div ng-show="diario._etapasAvaliacoes &amp;&amp; diario._etapasAvaliacoes.length !== 0"
+                    class="ng-hide"> <!---->
+                    <div>
+                        <div class="strong small margin-bottom-1 margin-top-2 cl-heading"> Resumo das Notas </div>
+                        <div class="flex wrap items-center"> <!----> </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="diario._pagina==='aulas'" class="ng-hide">
+                <div class="cl-text-faint text-center margin-top-1"
+                    ng-show="!diario._etapasAulas || diario._etapasAulas.length === 0"> Nenhuma aula registrada nesta
+                    disciplina. </div>
+                <div ng-show="diario._etapasAulas &amp;&amp; diario._etapasAulas.length !== 0" class="ng-hide"> <!---->
+                </div>
+            </div> <!---->
+        </div>
+    </div>
+</div>
