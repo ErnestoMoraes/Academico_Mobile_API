@@ -34,7 +34,7 @@ test('Lista de disciplinas de um semestre especifico', async ({ }) => {
             });
             const dados = $(el).find('div.collapse').find('div:nth-child(1)').find('div:nth-child(2)').find('div').find('div[class="margin-bottom-1 small"]');
             dados.each((i, el) => {
-                const dados = $(el).find('strong').first().html();
+                const dados = $(el).find('strong').first().html(); 
                 console.log(dados);
             });
         });
