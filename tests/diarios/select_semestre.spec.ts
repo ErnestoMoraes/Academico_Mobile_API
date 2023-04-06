@@ -25,6 +25,8 @@ test('Lista de disciplinas de um semestre especifico', async ({ }) => {
         const divsComClasse = $('div.panel.diarios-aluno__disciplina__container.nga-fast.nga-slide-left');
         const dadosdisciplina: DisciplinaDados[] = [];
         divsComClasse.each((i, el) => {
+
+            //! FEITO
             const divContent = $(el).find('div.diarios-aluno__disciplina__content');
             const Disciplina = divContent.find('div');
             dadosdisciplina.push({
@@ -32,11 +34,39 @@ test('Lista de disciplinas de um semestre especifico', async ({ }) => {
                 numeroDisciplina: Disciplina.find('div:nth-child(2)').html(),
                 professorDisciplina: Disciplina.find('div:nth-child(3)').html()
             });
-            const dados = $(el).find('div.collapse').find('div:nth-child(1)').find('div:nth-child(2)').find('div').find('div[class="margin-bottom-1 small"]');
-            dados.each((i, el) => {
-                const dados = $(el).find('strong').first().html(); 
-                console.log(dados);
+
+            const corpo = $(el).find('div.collapse').find('div:nth-child(1)').find('div:nth-child(2)').find('div');
+
+            //! FEITO
+            const cargaHoraria = $(corpo).find('div[class="margin-bottom-1 small"]');
+            cargaHoraria.each((i, el) => {
+                const dados = $(el).find('strong').first().html();
             });
+
+            //! FEITO
+            const faltas = $(corpo).find('div[class="margin-bottom-2"]');
+            faltas.each((i, el) => {
+                const dados = $(el).find('div').first().html();
+            });
+
+            //! FEITO
+            const porcentagens = $(corpo).find('div[class="gridlex-4_xs-1 gridlex-equalHeight"]');
+
+            const horas = $(porcentagens).find('div:nth-child(1)');
+            const horasnecessarias = $(horas).find('div').find('div').find('div:nth-child(2)').find('strong').html();
+
+            const presenca = $(porcentagens).find('div:nth-child(2)');
+            const presencas = $(presenca).find('div').find('div').find('div:nth-child(2)').html();
+
+            const ausencia = $(porcentagens).find('div:nth-child(3)');
+            const ausencias = $(ausencia).find('div').find('div').find('div:nth-child(2)').html();
+
+            const pendente = $(porcentagens).find('div:nth-child(4)');
+            const pendentes = $(pendente).find('div').find('div').find('div:nth-child(2)').html();
+
+            const avaliacoes = $(el).find('div.collapse').find('div:nth-child(1)').find('div:nth-child(4)').html();
+            // const avaliacoes4 = $(avaliacoes).find('div:nth-child(4)').html();
+            console.log(avaliacoes);
         });
 
     });
