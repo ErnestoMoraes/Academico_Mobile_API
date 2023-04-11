@@ -24,7 +24,7 @@ test('Lista de disciplinas de um semestre especifico', async ({ }) => {
         const $ = cheerio.load(html);
         const divsComClasse = $('div.panel.diarios-aluno__disciplina__container.nga-fast.nga-slide-left');
         const dadosdisciplina: DisciplinaDados[] = [];
-        divsComClasse.each((i, el) => {
+        await divsComClasse.each((i, el) => {
 
             //! FEITO
             const divContent = $(el).find('div.diarios-aluno__disciplina__content');
@@ -36,6 +36,14 @@ test('Lista de disciplinas de um semestre especifico', async ({ }) => {
             });
 
             const corpo = $(el).find('div.collapse').find('div:nth-child(1)').find('div:nth-child(2)').find('div');
+
+            const divAulas = $(el).find('[ng-class="{\'tab-active\': diario._pagina===\'aulas\'}"]');
+            if (divAulas) {
+                divAulas.addEventListener('click', () => {
+                    console.log('Clicou na div de aulas');
+                    // aqui você pode colocar o código para exibir o conteúdo desejado
+                });
+            }
 
             //! FEITO
             const cargaHoraria = $(corpo).find('div[class="margin-bottom-1 small"]');
@@ -64,16 +72,19 @@ test('Lista de disciplinas de um semestre especifico', async ({ }) => {
             const pendente = $(porcentagens).find('div:nth-child(4)');
             const pendentes = $(pendente).find('div').find('div').find('div:nth-child(2)').html();
 
-            const avaliacoes = $(el).find('div.collapse').find('div:nth-child(1)').find('div:nth-child(4)').html();
-            // const avaliacoes4 = $(avaliacoes).find('div:nth-child(4)').html();
-            console.log(avaliacoes);
-        });
 
+
+            const notasElementos = document.querySelectorAll('[ng-class="$ctrl.classeBoxNota(resumo)"]');
+            const notas: string[] = [];
+            notasElementos.forEach(elemento => {
+                const nota = elemento.textContent ?? "";
+                notas.push(nota);
+            });
+            console.log(notas);
+
+
+
+        });
     });
     page.close();
 });
-
-
-
-//*[@id="516177"]/div[2]/div/div[2]
-
