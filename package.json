@@ -1,9 +1,11 @@
 {
   "name": "codegen",
   "version": "1.0.0",
-  "description": "",
+  "description": "API do Academico Mobile usando testes e raspagem de dados.",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "jest"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -13,7 +15,12 @@
   "dependencies": {
     "@types/jsdom": "^21.1.1",
     "cheerio": "^1.0.0-rc.12",
+    "express": "^4.18.2",
     "jsdom": "^21.1.1",
+    "playwright": "^1.32.3",
     "puppeteer": "^19.8.2"
+  },
+  "directories": {
+    "test": "tests"
   }
 }
