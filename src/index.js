@@ -130,7 +130,6 @@ app.get('/diario-atual', async (req, res) => {
     }
 });
 
-
 app.get('/lista-ano-semestre', async (req, res) => {
     try {
         const browser = await chromium.launch({ headless: true });
