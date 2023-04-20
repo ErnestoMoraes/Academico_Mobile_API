@@ -25,6 +25,7 @@ app.post('/login', async (req, res) => {
         await page.waitForURL("https://qacademico.ifce.edu.br/qacademico/index.asp?t=2000");
         await context.storageState({ path: 'state.json' });
         await browser.close();
+        console.log('Login realizado com sucesso!');
         res.status(200).send('Login realizado com sucesso!');
     } catch (error) {
         console.log(error);
@@ -66,9 +67,9 @@ app.get('/horarios', async (req, res) => {
                     console.error(err);
                     res.status(500).send('Error saving file');
                 } else {
-                    console.log('Arquivo salvo!');
+                    console.log('Arquivo Horarios Enviado!');
                     const horarios = fs.readFileSync('horarios.json');
-                    res.send(horarios);
+                    res.status(200).send(horarios);
                 }
             });
 
@@ -88,6 +89,81 @@ app.get('/horarios', async (req, res) => {
         res.status(500).send('Error scraping data');
     }
 });
+
+app.get('/diario-atual', async (req, res) => {
+    try {
+        const browser = await chromium.launch({ headless: true });
+        const context = await browser.newContext({ storageState: 'state.json' });
+        const page = await context.newPage();
+
+        await page.goto('https://qacademico.ifce.edu.br/webapp/diarios');
+        await page.waitForLoadState('networkidle');
+
+        const html = await page.content();
+        const $ = cheerio.load(html);
+
+        const select = $('div[class="panel diarios-aluno__disciplina__container nga-fast nga-slide-left"]'); //container das disciplinas
+        const disciplinas = select.find('div[class="diarios-aluno__disciplina__content"]'); //disciplina
+        const dados = $(disciplinas).find('div:nth-child(1)');
+        const dadosdisciplina = {
+            nomeDisciplina: dados.find('div:nth-child(1)').html(),
+            numeroDisciplina: dados.find('div:nth-child(2)').html(),
+            professorDisciplina: dados.find('div:nth-child(3)').html()
+        };
+
+        fs.writeFile('semestre_atual.json', JSON.stringify(dadosdisciplina), (err) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Error saving file');
+            } else {
+                console.log('Diaio Atual Enviado!');
+                const semestreAtual = fs.readFileSync('semestre_atual.json');
+                res.send(semestreAtual);
+            }
+        });
+
+        await browser.close();
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error scraping data');
+        await browser.close();
+    }
+});
+
+
+app.get('/lista-ano-semestre', async (req, res) => {
+    try {
+        const browser = await chromium.launch({ headless: true });
+        const context = await browser.newContext({ storageState: 'state.json' });
+        const page = await context.newPage();
+        await page.goto('https://qacademico.ifce.edu.br/webapp/diarios');
+        await page.waitForLoadState('networkidle');
+        const html = await page.content();
+        const $ = cheerio.load(html);
+        const select = $('select[ng-model="$ctrl.periodoSelecionado"]');
+        const options = select.find('option');
+        const optionList = [];
+        options.each((i, el) => {
+            optionList.push($(el).text());
+        });
+        fs.writeFile('lista_ano_semestre.json', JSON.stringify(optionList), (err) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Erro ao salvar arquivo');
+            } else {
+                console.log('Lista de Anos e Semestres Enviada!');
+                const anossemestres = fs.readFileSync('lista_ano_semestre.json');
+                res.send(anossemestres);
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error scraping data');
+        await browser.close();
+    }
+
+});
+
 
 app.listen(port, () => {
     console.log(`API rodando em http://localhost:${port}`);

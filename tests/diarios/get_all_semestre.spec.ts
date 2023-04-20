@@ -13,7 +13,7 @@ test('Pegar todos os anos letivos e semestre', async ({ }) => {
         await page.waitForLoadState('networkidle');
         const html = await page.content();
         const $ = cheerio.load(html);
-        const select = $('select[class="select ng-pristine ng-untouched ng-valid ng-empty"]');
+        const select = $('select[ng-model="$ctrl.periodoSelecionado"]');
         const options = select.find('option');
         const optionList: string[] = [];
         options.each((i, el) => {

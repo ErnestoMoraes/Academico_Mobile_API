@@ -1,5 +1,7 @@
 import { chromium, test } from '@playwright/test';
 
+//! OK
+
 test('Pegar diário atual', async ({ }) => {
     const fs = require('fs');
     const cheerio = require('cheerio');
