@@ -9,7 +9,6 @@ test('login', async ({ }) => {
   await page.locator('#txtLogin').fill('20181135000167');
   await page.locator('#txtSenha').fill('ernesto9865');
   await page.getByRole('button', { name: 'OK' }).click();
-  await page.getByText('Horário Individual').click();
 
   await context.storageState({ path: 'state.json' });
   await browser.close();
