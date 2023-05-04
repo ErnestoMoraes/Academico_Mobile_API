@@ -178,13 +178,28 @@ app.get('/lista-disciplinas', async (req, res) => {
     const context = await browser.newContext({ storageState: 'state.json' });
     const page = await context.newPage();
     try {
-
         await page.goto('https://qacademico.ifce.edu.br/webapp/diarios').then(async () => {
             await page.waitForLoadState('networkidle', { timeout: 5000 });
             await page.selectOption('select[ng-model="$ctrl.periodoSelecionado"]', semestre);
             await page.waitForTimeout(1000);
             await page.waitForLoadState('networkidle');
         });
+
+        const divs = await page.$$('div.diarios-aluno__disciplina__content');
+        for (const div of divs) {
+            await div.click();
+            await page.waitForTimeout(500);
+            await page.waitForLoadState('networkidle');
+        }
+
+        const aulasDiv = await page.waitForSelector('div.tab-header[ng-class*=avaliacoes]');
+        await aulasDiv.waitForElementState('stable');
+        const aulasDivs = await page.$$('div.tab-header[ng-class*=avaliacoes]');
+        for (const div of aulasDivs) {
+            await div.click();
+            await page.waitForTimeout(500);
+            await page.waitForLoadState('networkidle');
+        }
 
         const html = await page.content();
         const $ = cheerio.load(html);
@@ -194,6 +209,8 @@ app.get('/lista-disciplinas', async (req, res) => {
 
         await divsComClasse.each((i, el) => {
             const divContent = $(el).find('div.diarios-aluno__disciplina__content');
+
+
             const Disciplina = divContent.find('div');
 
             const body = $(el).find('div.collapse').find('div:nth-child(1)').find('div:nth-child(2)').find('div');
@@ -201,7 +218,6 @@ app.get('/lista-disciplinas', async (req, res) => {
             const horarioHTML = $(body).find('div[class="margin-bottom-1 small"]');
             const cargaHoraHTML = horarioHTML.find('strong').html();
             const cargaHoraria = cargaHoraHTML.match(/\d+/)[0];
-
 
             const faltasHTML = $(body).find('div[class="margin-bottom-2"]');
             const cargaFaltaHTML = faltasHTML.find('div').html();
@@ -254,9 +270,23 @@ app.get('/lista-disciplinas', async (req, res) => {
                 ausenciaLista: ausenciaLista,
                 pendenteLista: pendenteLista
             };
+
+            const divAvaliacoes = $(el).find('div[ng-show="diario._etapasAvaliacoes && diario._etapasAvaliacoes.length !== 0"]').html();
+            const $5 = cheerio.load(divAvaliacoes);
+            const notasLista = {};
+            $5('.flex.column.items-center').each((i, el) => {
+                const notas = {};
+                const nota = $5(el).children().eq(0).text().trim();
+                const titulo = $5(el).children().eq(1).text().trim();
+                notas[titulo] = nota;
+                Object.assign(notasLista, notas);
+            });
+
+            disciplina.notasLista = notasLista;
             disciplinas.push(disciplina);
         });
-        console.log('Disciplinas Semestre: ' + semestre + ' - Enviada');
+
+        console.log('Disciplinas Semestre - Enviado');
         res.status(200).send(disciplinas);
         await page.close();
     } catch (error) {

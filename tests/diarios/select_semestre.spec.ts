@@ -40,16 +40,6 @@ test('Lista de disciplinas de um semestre especifico', async ({ }) => {
             const divAulas = $(el).find('[ng-class="{\'tab-active\': diario._pagina===\'aulas\'}"]');
             console.log(divAulas);
 
-            // if (divAulas.length > 0) {
-            //     divAulas.get(0).addEventListener('click', () => {
-            //         console.log('Clicou na div de aulas');
-            //         // aqui você pode colocar o código para exibir o conteúdo desejado
-            //     });
-            // }
-
-
-
-
             //! FEITO
             const cargaHoraria = $(corpo).find('div[class="margin-bottom-1 small"]');
             cargaHoraria.each((i, el) => {
