@@ -233,20 +233,20 @@ app.get('/lista-disciplinas', async (req, res) => {
             const $2 = cheerio.load(presencas);
             const presencaHora = $2('strong').first().text().trim();
             const presencaPorcent = $2('strong').last().text().trim().replace('%', '');
-            const presencaLista = {
+            const presencaLista = [
                 presencaHora,
                 presencaPorcent
-            }
+            ];
 
             const ausencia = $(porcentagens).find('div:nth-child(3)');
             const ausencias = $(ausencia).find('div').find('div').find('div:nth-child(2)').html();
             const $3 = cheerio.load(ausencias);
             const ausenciaHora = $3('strong').first().text().trim();
             const ausenciaPorcent = $3('strong').last().text().trim().replace('%', '');;
-            const ausenciaLista = {
+            const ausenciaLista = [
                 ausenciaHora,
                 ausenciaPorcent
-            }
+            ];
 
             const pendente = $(porcentagens).find('div:nth-child(4)');
             const pendentes = $(pendente).find('div').find('div').find('div:nth-child(2)').html();
@@ -254,40 +254,42 @@ app.get('/lista-disciplinas', async (req, res) => {
             const pendenteHora = $4('strong').first().text().trim();
             const pendentePorcent = $4('strong').last().text().trim();
             const [, porcentagem] = pendentePorcent.match(/\((\d+\,\d+)%\)/);
-            const pendenteLista = {
+            const pendenteLista = [
                 pendenteHora,
                 porcentagem
-            }
-
-            const disciplina = {
-                id: Disciplina.find('div:nth-child(1)').html(),
-                disciplina: Disciplina.find('div:nth-child(2)').html(),
-                professor: Disciplina.find('div:nth-child(3)').html(),
-                cargaHoraria: cargaHoraria,
-                cargaFaltas: cargaFaltas,
-                horasNecessarias: horasNecessarias,
-                presencaLista: presencaLista,
-                ausenciaLista: ausenciaLista,
-                pendenteLista: pendenteLista
-            };
+            ];
 
             const divAvaliacoes = $(el).find('div[ng-show="diario._etapasAvaliacoes && diario._etapasAvaliacoes.length !== 0"]').html();
             const $5 = cheerio.load(divAvaliacoes);
-            const notasLista = {};
+            const notasLista = [];
             $5('.flex.column.items-center').each((i, el) => {
-                const notas = {};
                 const nota = $5(el).children().eq(0).text().trim();
-                const titulo = $5(el).children().eq(1).text().trim();
-                notas[titulo] = nota;
-                Object.assign(notasLista, notas);
+                notasLista.push(nota);
+                console.log('nota', nota);
             });
 
-            disciplina.notasLista = notasLista;
+            const disciplina = {
+                id: Disciplina.find('div:nth-child(1)').html(),
+                nome: Disciplina.find('div:nth-child(2)').html(),
+                professor: Disciplina.find('div:nth-child(3)').html(),
+                resumo: {
+                    carga_horaria: cargaHoraria,
+                    faltas: cargaFaltas,
+                    aulas_futuras: horasNecessarias,
+                    presencas: presencaLista,
+                    ausencias: ausenciaLista,
+                    pendentes: pendenteLista
+                },
+                avaliacoes: notasLista
+            };
             disciplinas.push(disciplina);
         });
 
         console.log('Disciplinas Semestre - Enviado');
-        res.status(200).send(disciplinas);
+        res.status(200).send({
+            semestre: semestre,
+            disciplinas: disciplinas
+        });
         await page.close();
     } catch (error) {
         console.error(error);
