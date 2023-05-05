@@ -98,37 +98,121 @@ app.get('/horarios', async (req, res) => {
 });
 
 app.get('/diario-atual', async (req, res) => {
+    const browser = await chromium.launch({ headless: false });
+    const context = await browser.newContext({ storageState: 'state.json' });
+    const page = await context.newPage();
     try {
-        const browser = await chromium.launch({ headless: false });
-        const context = await browser.newContext({ storageState: 'state.json' });
-        const page = await context.newPage();
+        await page.goto('https://qacademico.ifce.edu.br/webapp/diarios').then(async () => {
+            await page.waitForLoadState('networkidle', { timeout: 5000 });
+            await page.waitForTimeout(500);
+            await page.waitForLoadState('networkidle');
+        });
 
-        await page.goto('https://qacademico.ifce.edu.br/webapp/diarios');
-        await page.waitForLoadState('networkidle');
+        const divs = await page.$$('div.diarios-aluno__disciplina__content');
+        for (const div of divs) {
+            await div.click();
+            await page.waitForTimeout(500);
+            await page.waitForLoadState('networkidle');
+        }
+
+        const aulasDiv = await page.waitForSelector('div.tab-header[ng-class*=avaliacoes]');
+        await aulasDiv.waitForElementState('stable');
+        const aulasDivs = await page.$$('div.tab-header[ng-class*=avaliacoes]');
+        for (const div of aulasDivs) {
+            await div.click();
+            await page.waitForTimeout(500);
+            await page.waitForLoadState('networkidle');
+        }
 
         const html = await page.content();
         const $ = cheerio.load(html);
 
-        const select = $('div[class="panel diarios-aluno__disciplina__container nga-fast nga-slide-left"]'); //container das disciplinas
-        const disciplinas = select.find('div[class="diarios-aluno__disciplina__content"]'); //disciplina
-        const dados = $(disciplinas).find('div:nth-child(1)');
-        const dadosdisciplina = {
-            nomeDisciplina: dados.find('div:nth-child(1)').html(),
-            numeroDisciplina: dados.find('div:nth-child(2)').html(),
-            professorDisciplina: dados.find('div:nth-child(3)').html()
-        };
+        const divsComClasse = $('div.panel.diarios-aluno__disciplina__container.nga-fast.nga-slide-left');
+        const disciplinas = [];
 
-        fs.writeFile('semestre_atual.json', JSON.stringify(dadosdisciplina), (err) => {
-            if (err) {
-                console.error(err);
-                res.status(500).send('Error saving file');
-            } else {
-                console.log('Diaio Atual - Enviado');
-                const semestreAtual = fs.readFileSync('semestre_atual.json');
-                res.send(semestreAtual);
-            }
+        await divsComClasse.each((i, el) => {
+            const divContent = $(el).find('div.diarios-aluno__disciplina__content');
+
+
+            const Disciplina = divContent.find('div');
+
+            const body = $(el).find('div.collapse').find('div:nth-child(1)').find('div:nth-child(2)').find('div');
+
+            const horarioHTML = $(body).find('div[class="margin-bottom-1 small"]');
+            const cargaHoraHTML = horarioHTML.find('strong').html();
+            const cargaHoraria = cargaHoraHTML.match(/\d+/)[0];
+
+            const faltasHTML = $(body).find('div[class="margin-bottom-2"]');
+            const cargaFaltaHTML = faltasHTML.find('div').html();
+            const cargaFaltas = cargaFaltaHTML.match(/\d+/)[0];
+
+            const porcentagens = $(body).find('div[class="gridlex-4_xs-1 gridlex-equalHeight"]');
+
+            const horas = $(porcentagens).find('div:nth-child(1)');
+            const horasNecessarias = $(horas).find('div').find('div').find('div:nth-child(2)').find('strong').html();
+
+            const presenca = $(porcentagens).find('div:nth-child(2)');
+            const presencas = $(presenca).find('div').find('div').find('div:nth-child(2)').html();
+            const $2 = cheerio.load(presencas);
+            const presencaHora = $2('strong').first().text().trim();
+            const presencaPorcent = $2('strong').last().text().trim().replace('%', '');
+            const presencaLista = [
+                presencaHora,
+                presencaPorcent
+            ];
+
+            const ausencia = $(porcentagens).find('div:nth-child(3)');
+            const ausencias = $(ausencia).find('div').find('div').find('div:nth-child(2)').html();
+            const $3 = cheerio.load(ausencias);
+            const ausenciaHora = $3('strong').first().text().trim();
+            const ausenciaPorcent = $3('strong').last().text().trim().replace('%', '');;
+            const ausenciaLista = [
+                ausenciaHora,
+                ausenciaPorcent
+            ];
+
+            const pendente = $(porcentagens).find('div:nth-child(4)');
+            const pendentes = $(pendente).find('div').find('div').find('div:nth-child(2)').html();
+            const $4 = cheerio.load(pendentes);
+            const pendenteHora = $4('strong').first().text().trim();
+            const pendentePorcent = $4('strong').last().text().trim();
+            const [, porcentagem] = pendentePorcent.match(/\((\d+\,\d+)%\)/);
+            const pendenteLista = [
+                pendenteHora,
+                porcentagem
+            ];
+
+            const divAvaliacoes = $(el).find('div[ng-show="diario._etapasAvaliacoes && diario._etapasAvaliacoes.length !== 0"]').html();
+            const $5 = cheerio.load(divAvaliacoes);
+            const notasLista = [];
+            $5('.flex.column.items-center').each((i, el) => {
+                const nota = $5(el).children().eq(0).text().trim();
+                notasLista.push(nota);
+                console.log('nota', nota);
+            });
+
+            const disciplina = {
+                id: Disciplina.find('div:nth-child(1)').html(),
+                nome: Disciplina.find('div:nth-child(2)').html(),
+                professor: Disciplina.find('div:nth-child(3)').html(),
+                resumo: {
+                    carga_horaria: cargaHoraria,
+                    faltas: cargaFaltas,
+                    aulas_futuras: horasNecessarias,
+                    presencas: presencaLista,
+                    ausencias: ausenciaLista,
+                    pendentes: pendenteLista
+                },
+                avaliacoes: notasLista
+            };
+            disciplinas.push(disciplina);
         });
 
+        console.log('Disciplinas Semestre Atual - Enviado');
+        res.status(200).send({
+            semestre: "",
+            disciplinas: disciplinas
+        });
         await page.close();
     } catch (error) {
         console.error(error);
@@ -152,18 +236,9 @@ app.get('/lista-ano-semestre', async (req, res) => {
         options.each((i, el) => {
             optionList.push($(el).text());
         });
-        fs.writeFile('lista_ano_semestre.json', JSON.stringify(optionList), (err) => {
-            if (err) {
-                console.error(err);
-                res.status(500).send('Erro ao salvar arquivo');
-                page.close();
-            } else {
-                console.log('Lista de Anos e Semestres - Enviado');
-                const anossemestres = fs.readFileSync('lista_ano_semestre.json');
-                res.send(anossemestres);
-                page.close();
-            }
-        });
+        console.log('Lista de Anos e Semestres - Enviado');
+        res.status(200).send(JSON.stringify(optionList));
+        page.close();
     } catch (error) {
         console.error(error);
         res.status(500).send('Error scraping data');
