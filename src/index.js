@@ -12,7 +12,7 @@ app.use(express.json());
 app.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
-        const browser = await chromium.launch({ headless: false });
+        const browser = await chromium.launch({ headless: true });
         const context = await browser.newContext();
         const page = await context.newPage();
 
@@ -37,7 +37,7 @@ app.post('/login', async (req, res) => {
 
 app.get('/horarios', async (req, res) => {
     try {
-        const browser = await chromium.launch({ headless: false });
+        const browser = await chromium.launch({ headless: true });
         const context = await browser.newContext({ storageState: 'state.json' });
         const page = await context.newPage();
 
@@ -98,7 +98,7 @@ app.get('/horarios', async (req, res) => {
 });
 
 app.get('/diario-atual', async (req, res) => {
-    const browser = await chromium.launch({ headless: false });
+    const browser = await chromium.launch({ headless: true });
     const context = await browser.newContext({ storageState: 'state.json' });
     const page = await context.newPage();
     try {
@@ -223,7 +223,7 @@ app.get('/diario-atual', async (req, res) => {
 
 app.get('/lista-ano-semestre', async (req, res) => {
     try {
-        const browser = await chromium.launch({ headless: false });
+        const browser = await chromium.launch({ headless: true });
         const context = await browser.newContext({ storageState: 'state.json' });
         const page = await context.newPage();
         await page.goto('https://qacademico.ifce.edu.br/webapp/diarios');
@@ -249,7 +249,7 @@ app.get('/lista-ano-semestre', async (req, res) => {
 
 app.get('/lista-disciplinas', async (req, res) => {
     const { semestre } = req.body;
-    const browser = await chromium.launch({ headless: false });
+    const browser = await chromium.launch({ headless: true });
     const context = await browser.newContext({ storageState: 'state.json' });
     const page = await context.newPage();
     try {
