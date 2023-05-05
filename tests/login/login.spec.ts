@@ -11,6 +11,6 @@ test('login', async ({ }) => {
   await page.getByRole('button', { name: 'OK' }).click();
 
   await context.storageState({ path: 'state.json' });
-  await browser.close();
+  await page.close();
 
 });

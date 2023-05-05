@@ -38,4 +38,5 @@ test('Notas da avaliações', async ({ }) => {
         const lista = listaDeListas[i];
         console.log(lista);
     }
+    await page.close();
 });

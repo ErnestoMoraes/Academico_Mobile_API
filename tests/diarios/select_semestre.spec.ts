@@ -91,5 +91,5 @@ test('Lista de disciplinas de um semestre especifico', async ({ }) => {
 
         });
     });
-    page.close();
+    await page.close();
 });
