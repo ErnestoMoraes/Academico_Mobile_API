@@ -5,7 +5,7 @@ test('Pegar todos os anos letivos e semestre', async ({ }) => {
     const fs = require('fs');
     const cheerio = require('cheerio');
 
-    const browser = await chromium.launch({ headless: false });
+    const browser = await chromium.launch({ headless: true });
     const context = await browser.newContext({ storageState: 'state.json' });
     const page = await context.newPage();
 

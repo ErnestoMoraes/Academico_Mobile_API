@@ -3,7 +3,7 @@ import { chromium, test } from '@playwright/test';
 //* Avaliações - Quase feito
 test('Notas da avaliações', async ({ }) => {
 
-    const browser = await chromium.launch({ headless: false });
+    const browser = await chromium.launch({ headless: true });
     const context = await browser.newContext({ storageState: 'state.json' });
     const page = await context.newPage();
 
