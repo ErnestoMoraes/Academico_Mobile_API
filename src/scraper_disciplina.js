@@ -18,9 +18,15 @@ async function scrapeDisciplinas(semestres, page) {
             await page.waitForLoadState('networkidle');
         }
 
-        await page.waitForSelector('div.tab-header[ng-class*=avaliacoes]');
+        await page.waitForSelector('div.tab-header[ng-class*=avaliacoes]', {
+            timeout: 10000,
+            waitForLoadState: 'visible or hidden or stable or networkidle or load or domcontentloaded or enabled'
+        });
 
-        const aulasDivs = await page.$$('div.tab-header[ng-class*=avaliacoes]', { timeout: 100 });
+        const aulasDivs = await page.$$('div.tab-header[ng-class*=avaliacoes]', {
+            timeout: 10000
+
+        });
         for (const div of aulasDivs) {
             await div.click();
             await page.waitForTimeout(500);
@@ -32,7 +38,7 @@ async function scrapeDisciplinas(semestres, page) {
 
         const divsComClasse = $('div.panel.diarios-aluno__disciplina__container.nga-fast.nga-slide-left');
 
-        const disciplinas = []; // Armazena as disciplinas do semestre atual
+        const disciplinas = [];
         await divsComClasse.each((i, el) => {
             const divContent = $(el).find('div.diarios-aluno__disciplina__content');
 

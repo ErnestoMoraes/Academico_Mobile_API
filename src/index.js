@@ -2,7 +2,8 @@ const express = require('express');
 const { chromium } = require('playwright');
 const cheerio = require('cheerio');
 const fs = require('fs');
-const scraper = require('./scraper');
+const scraper_disciplinas = require('./scraper_disciplina');
+const find_all_semestres = require('./find_all_semestres');
 
 const app = express();
 const port = 3000;
@@ -50,7 +51,7 @@ app.get('/homepage', async (req, res) => {
             {
                 "id": 2,
                 "name": "Diários",
-                "image": "assets/images/images_cards/timetable.png",
+                "image": "assets/images/images_cards/schedule.png",
                 "url": "/daily"
             }
         ]);
@@ -100,9 +101,12 @@ app.get('/horarios', async (req, res) => {
 
             const horariosPorDia = {};
 
-            // Inicializa o objeto horariosPorDia com um objeto para cada dia da semana
             for (const dia of diasDaSemana) {
-                horariosPorDia[dia] = { id: diasDaSemana.indexOf(dia), dia: dia, horarios: [] };
+                horariosPorDia[dia] = {
+                    id: diasDaSemana.indexOf(dia),
+                    dia: dia,
+                    horarios: []
+                };
             }
 
             // Adiciona as disciplinas a cada dia da semana
@@ -110,12 +114,20 @@ app.get('/horarios', async (req, res) => {
                 const horario = item.horario;
                 const disciplinas = item.disciplinas;
 
+                // Adiciona um item no início do array disciplinas - Sunday
+                disciplinas.unshift("");
+
+                // Adiciona um item no final do array disciplinas - Saturday
+                disciplinas.push("");
+
+
                 // Separa as horas iniciais e finais
                 const [horaInicial, horaFinal] = horario.split("~");
 
 
                 // Adiciona as disciplinas ao horário correspondente em cada dia da semana
                 for (let i = 0; i < disciplinas.length; i++) {
+
                     const disciplina = disciplinas[i];
 
                     if (disciplina !== "") {
@@ -285,39 +297,29 @@ app.get('/diario-atual', async (req, res) => {
 });
 
 app.get('/lista-ano-semestre', async (req, res) => {
+    const browser = await chromium.launch({ headless: true });
+    const context = await browser.newContext({ storageState: 'state.json' });
+    const page = await context.newPage();
     try {
-        const browser = await chromium.launch({ headless: true });
-        const context = await browser.newContext({ storageState: 'state.json' });
-        const page = await context.newPage();
-        await page.goto('https://qacademico.ifce.edu.br/webapp/diarios');
-        await page.waitForLoadState('networkidle');
-        const html = await page.content();
-        const $ = cheerio.load(html);
-
-        const select = $('select[ng-model="$ctrl.periodoSelecionado"]');
-        const options = select.find('option');
-        const optionList = [];
-        options.each((i, el) => {
-            optionList.push($(el).text());
-        });
-        console.log('Lista de Anos e Semestres - Enviado');
-        res.status(200).send(JSON.stringify(optionList));
-        page.close();
+        const listaDeAnoSemestre = await find_all_semestres.findAllSemestres(page);
+        console.log('Ano Semestre - Enviado');
+        res.status(200).send(listaDeAnoSemestre);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error scraping data');
+    } finally {
         await page.close();
     }
 
 });
 
 app.get('/lista-disciplinas', async (req, res) => {
-    const { semestres } = req.body;
-    const browser = await chromium.launch({ headless: false });
+    const browser = await chromium.launch({ headless: true });
     const context = await browser.newContext({ storageState: 'state.json' });
     const page = await context.newPage();
     try {
-        const listaDeDisciplinas = await scraper.scrapeDisciplinas(semestres, page);
+        const semestres = await find_all_semestres.findAllSemestres(page);
+        const listaDeDisciplinas = await scraper_disciplinas.scrapeDisciplinas(semestres, page);
         console.log('Disciplinas Semestre - Enviado');
         res.status(200).send(listaDeDisciplinas);
     } catch (error) {

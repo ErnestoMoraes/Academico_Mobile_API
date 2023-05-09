@@ -1,8 +1,8 @@
 {
   "cookies": [
     {
-      "name": "ASPSESSIONIDQUBSSQAD",
-      "value": "PAEGLCIADDEFEJBHHOKEBONM",
+      "name": "ASPSESSIONIDSUBSTRAC",
+      "value": "APEFEEPAMEDHNDNGBAHAOIDN",
       "domain": "qacademico.ifce.edu.br",
       "path": "/",
       "expires": -1,
@@ -12,10 +12,10 @@
     },
     {
       "name": "__utma",
-      "value": "100960769.1635947979.1683576345.1683576345.1683576345.1",
+      "value": "100960769.22391901.1683667501.1683667501.1683667501.1",
       "domain": ".qacademico.ifce.edu.br",
       "path": "/",
-      "expires": 1718136347.550414,
+      "expires": 1718227504.008597,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
@@ -32,10 +32,10 @@
     },
     {
       "name": "__utmz",
-      "value": "100960769.1683576345.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)",
+      "value": "100960769.1683667501.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)",
       "domain": ".qacademico.ifce.edu.br",
       "path": "/",
-      "expires": 1699344347,
+      "expires": 1699435504,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
@@ -45,7 +45,7 @@
       "value": "1",
       "domain": ".qacademico.ifce.edu.br",
       "path": "/",
-      "expires": 1683576944,
+      "expires": 1683668100,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
@@ -55,17 +55,17 @@
       "value": "1",
       "domain": ".qacademico.ifce.edu.br",
       "path": "/",
-      "expires": 1683576944,
+      "expires": 1683668100,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
     },
     {
       "name": "__utmb",
-      "value": "100960769.4.10.1683576345",
+      "value": "100960769.4.10.1683667501",
       "domain": ".qacademico.ifce.edu.br",
       "path": "/",
-      "expires": 1683578147,
+      "expires": 1683669304,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
