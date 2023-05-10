@@ -39,12 +39,14 @@ test('horarios', async ({ }) => {
             fs.writeFile('horarios.json', JSON.stringify(aulas), (err: any) => {
                 if (err) throw err;
                 console.log('Arquivo salvo!');
+                page.close();
             });
         }
     }).catch((err: any) => {
         fs.writeFile('horarios.json', JSON.stringify([]), (err: any) => {
             if (err) throw err;
             console.log('Arquivo vázio!');
+            page.close();
         });
     });
 });

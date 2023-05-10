@@ -6,7 +6,7 @@ test('Lista de disciplinas de um semestre especifico', async ({ }) => {
     const fs = require('fs');
     const cheerio = require('cheerio');
 
-    const browser = await chromium.launch({ headless: false });
+    const browser = await chromium.launch({ headless: true });
     const context = await browser.newContext({ storageState: 'state.json' });
     const page = await context.newPage();
 
@@ -19,12 +19,12 @@ test('Lista de disciplinas de um semestre especifico', async ({ }) => {
     await page.goto('https://qacademico.ifce.edu.br/webapp/diarios').then(async () => {
         await page.waitForLoadState('networkidle');
         await page.selectOption('select.select', { label: '2019/1' });
-        await page.waitForTimeout(1000);
+        await page.waitForLoadState('networkidle');
         const html = await page.content();
         const $ = cheerio.load(html);
         const divsComClasse = $('div.panel.diarios-aluno__disciplina__container.nga-fast.nga-slide-left');
         const dadosdisciplina: DisciplinaDados[] = [];
-        await divsComClasse.each((i, el) => {
+        await divsComClasse.each(async (i, el) => {
 
             //! FEITO
             const divContent = $(el).find('div.diarios-aluno__disciplina__content');
@@ -38,12 +38,7 @@ test('Lista de disciplinas de um semestre especifico', async ({ }) => {
             const corpo = $(el).find('div.collapse').find('div:nth-child(1)').find('div:nth-child(2)').find('div');
 
             const divAulas = $(el).find('[ng-class="{\'tab-active\': diario._pagina===\'aulas\'}"]');
-            if (divAulas) {
-                divAulas.addEventListener('click', () => {
-                    console.log('Clicou na div de aulas');
-                    // aqui você pode colocar o código para exibir o conteúdo desejado
-                });
-            }
+            console.log(divAulas);
 
             //! FEITO
             const cargaHoraria = $(corpo).find('div[class="margin-bottom-1 small"]');
@@ -72,19 +67,29 @@ test('Lista de disciplinas de um semestre especifico', async ({ }) => {
             const pendente = $(porcentagens).find('div:nth-child(4)');
             const pendentes = $(pendente).find('div').find('div').find('div:nth-child(2)').html();
 
+            if (!page.isClosed()) {
+                const notasElementos = await page.$$('div[ng-class="$ctrl.classeBoxNota(resumo)"]');
+                const notas = await Promise.all(notasElementos.map(async elemento => {
+                    const nota = await elemento.textContent() ?? "";
+                    return nota;
+                }));
+                console.log(notas);
+            } else {
+                console.log('A página já foi fechada');
+            }
 
 
-            const notasElementos = document.querySelectorAll('[ng-class="$ctrl.classeBoxNota(resumo)"]');
-            const notas: string[] = [];
-            notasElementos.forEach(elemento => {
-                const nota = elemento.textContent ?? "";
-                notas.push(nota);
-            });
-            console.log(notas);
+            // const notasElementos = document.querySelectorAll('[ng-class="$ctrl.classeBoxNota(resumo)"]');
+            // const notas: string[] = [];
+            // notasElementos.forEach(elemento => {
+            //     const nota = elemento.textContent ?? "";
+            //     notas.push(nota);
+            // });
+            // console.log(notas);
 
 
 
         });
     });
-    page.close();
+    await page.close();
 });
