@@ -14,7 +14,6 @@ async function findAllSemestres(page) {
             optionList.push($(el).text());
         }
     });
-
     return optionList;
 }
 

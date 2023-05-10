@@ -18,15 +18,23 @@ async function scrapeDisciplinas(semestres, page) {
             await page.waitForLoadState('networkidle');
         }
 
-        await page.waitForSelector('div.tab-header[ng-class*=avaliacoes]', {
-            timeout: 10000,
-            waitForLoadState: 'visible or hidden or stable or networkidle or load or domcontentloaded or enabled'
-        });
+        await page.waitForSelector('div.tab-header[ng-class*=avaliacoes]');
 
-        const aulasDivs = await page.$$('div.tab-header[ng-class*=avaliacoes]', {
-            timeout: 10000
+        async function waitForElementsWithDelay(selector, delay) {
+            while (true) {
+                const elements = await page.$$(selector);
+                if (elements.length > 0) {
+                    return elements;
+                }
+                await page.waitForTimeout(delay);
+            }
+        }
 
-        });
+        const selector = 'div.tab-header[ng-class*=avaliacoes]';
+        const delay = 2000; // Atraso de 2 segundos
+
+        const aulasDivs = await waitForElementsWithDelay(selector, delay);
+
         for (const div of aulasDivs) {
             await div.click();
             await page.waitForTimeout(500);
