@@ -4,6 +4,7 @@ const cheerio = require('cheerio');
 const fs = require('fs');
 const scraper_disciplinas = require('./scraper_disciplina');
 const find_all_semestres = require('./find_all_semestres');
+const scrape_disciplinas_teste = require('./especific');
 
 const app = express();
 const port = 3000;
@@ -66,7 +67,6 @@ app.get('/horarios', async (req, res) => {
         const browser = await chromium.launch({ headless: true });
         const context = await browser.newContext({ storageState: 'state.json' });
         const page = await context.newPage();
-
         await page.goto('https://qacademico.ifce.edu.br/qacademico/index.asp?t=2010');
         await page.waitForSelector('body');
         const html = await page.content();
@@ -169,8 +169,6 @@ app.get('/horarios', async (req, res) => {
         res.status(500).send('Erro!');
     }
 });
-
-
 
 app.get('/diario-atual', async (req, res) => {
     const browser = await chromium.launch({ headless: true });
@@ -291,7 +289,7 @@ app.get('/diario-atual', async (req, res) => {
         await page.close();
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error scraping data');
+        res.status(500);
         await page.close();
     }
 });
@@ -306,7 +304,7 @@ app.get('/lista-ano-semestre', async (req, res) => {
         res.status(200).send(listaDeAnoSemestre);
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error scraping data');
+        res.status(500);
     } finally {
         await page.close();
     }
@@ -314,7 +312,7 @@ app.get('/lista-ano-semestre', async (req, res) => {
 });
 
 app.get('/lista-disciplinas', async (req, res) => {
-    const browser = await chromium.launch({ headless: true });
+    const browser = await chromium.launch({ headless: false });
     const context = await browser.newContext({ storageState: 'state.json' });
     const page = await context.newPage();
     try {
@@ -324,11 +322,44 @@ app.get('/lista-disciplinas', async (req, res) => {
         res.status(200).send(listaDeDisciplinas);
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error scraping data');
+        res.status(500);
     } finally {
         await page.close();
     }
 });
+
+app.get('/teste', async (req, res) => {
+    try {
+        const semestres = [
+            ["2022/2", "2022/1"],
+            ["2021/2", "2021/1"],
+            ["2020/2", "2020/1"],
+            ["2019/2", "2019/1"],
+            ["2018/2", "2018/1"]
+        ];
+
+        const semestresDisciplinas = [];
+
+        for (const [semestre1, semestre2] of semestres) {
+            const disciplinas = await Promise.all([
+                scrape_disciplinas_teste.scrapeDisciplinasTeste([semestre1]),
+                scrape_disciplinas_teste.scrapeDisciplinasTeste([semestre2])
+            ]);
+
+            semestresDisciplinas.push(disciplinas.flat());
+        }
+
+        const listaDeDisciplinas = semestresDisciplinas.flat();
+        console.log('Disciplinas Teste - Enviado');
+        res.status(200).send(listaDeDisciplinas);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro interno do servidor');
+    }
+});
+
+
+
 
 
 app.listen(port, () => {
