@@ -7,7 +7,6 @@ async function scrapeDisciplinasTeste(semestre) {
     const page = await context.newPage();
     const semestresDisciplinas = [];
     try {
-        // await page.waitForTimeout(Math.random() * (2000 - 500) + 500);
         await page.goto('https://qacademico.ifce.edu.br/webapp/diarios');
         await page.waitForLoadState('networkidle');
         await page.waitForSelector('select[ng-model="$ctrl.periodoSelecionado"]');
@@ -62,7 +61,7 @@ async function scrapeDisciplinasTeste(semestre) {
             const divContent = $(el).find('div.diarios-aluno__disciplina__content');
             const Disciplina = divContent.find('div');
             const body = $(el).find('div.collapse').find('div:nth-child(1)').find('div:nth-child(2)').find('div');
-            
+
             const horarioHTML = $(body).find('div[class="margin-bottom-1 small"]');
             const cargaHoraHTML = horarioHTML.find('strong').html();
             const cargaHoraria = cargaHoraHTML.match(/\d+/)[0];

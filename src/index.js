@@ -14,22 +14,26 @@ app.use(express.json());
 
 app.post('/login', async (req, res) => {
     const { matricula, password } = req.body;
-    const browser = await chromium.launch({ headless: true });
+    const browser = await chromium.launch({ headless: false });
     const context = await browser.newContext();
     const page = await context.newPage();
     try {
         await page.goto('https://qacademico.ifce.edu.br/qacademico/index.asp?t=1001');
+        await page.waitForTimeout(7000);
         await page.fill('#txtLogin', matricula);
+        await page.waitForTimeout(3000);
         await page.fill('#txtSenha', password);
+        await page.waitForTimeout(3000);
         await page.click('#btnOk');
-
+        
         await page.waitForURL("https://qacademico.ifce.edu.br/qacademico/index.asp?t=2000", { waitUntil: 'domcontentloaded', timeout: 10000 });
+        await page.waitForTimeout(10000);
 
         const state = await context.storageState({ path: 'state.json' });
         const access_token = state.cookies[0].value;
 
         const beartoken = 'Bearer ' + access_token;
-        console.log('Login - Sucesso');
+        
         res.status(200).send({ 'access_token': beartoken });
         await page.close();
     } catch (error) {
@@ -54,6 +58,18 @@ app.get('/homepage', async (req, res) => {
                 "name": "Diários",
                 "image": "assets/images/images_cards/schedule.png",
                 "url": "/daily"
+            },
+            {
+                "id": 3,
+                "name": "Histórico Escolar",
+                "image": "assets/images/images_cards/documentation.png",
+                "url": "/school_records"
+            },
+            {
+                "id": 4,
+                "name": "Solicitar Documentos",
+                "image": "assets/images/images_cards/education.png",
+                "url": "/request_documents"
             }
         ]);
     } catch (error) {
@@ -357,10 +373,6 @@ app.get('/teste', async (req, res) => {
         res.status(500).send('Erro interno do servidor');
     }
 });
-
-
-
-
 
 app.listen(port, () => {
     console.log(`API rodando em http://localhost:${port}`);
