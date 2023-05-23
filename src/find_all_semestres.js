@@ -14,6 +14,7 @@ async function findAllSemestres(page) {
             optionList.push($(el).text());
         }
     });
+    console.log('todos os semestres: ', optionList);
     return optionList;
 }
 
