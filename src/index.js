@@ -19,21 +19,18 @@ app.post('/login', async (req, res) => {
     const page = await context.newPage();
     try {
         await page.goto('https://qacademico.ifce.edu.br/qacademico/index.asp?t=1001');
-        await page.waitForTimeout(7000);
         await page.fill('#txtLogin', matricula);
-        await page.waitForTimeout(3000);
         await page.fill('#txtSenha', password);
         await page.waitForTimeout(3000);
         await page.click('#btnOk');
-        
+
         await page.waitForURL("https://qacademico.ifce.edu.br/qacademico/index.asp?t=2000", { waitUntil: 'domcontentloaded', timeout: 10000 });
-        await page.waitForTimeout(10000);
 
         const state = await context.storageState({ path: 'state.json' });
         const access_token = state.cookies[0].value;
 
         const beartoken = 'Bearer ' + access_token;
-        
+
         res.status(200).send({ 'access_token': beartoken });
         await page.close();
     } catch (error) {
